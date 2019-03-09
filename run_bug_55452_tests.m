@@ -42,7 +42,7 @@ endfunction
 function [names, d] = mydir (the_dir_arg)
   d = dir (the_dir_arg);
   names = { d.name };
-  tf = !ismember (names, {'.', '..'});
+  tf = !ismember (names, {'.', '..', '.DS_Store'});
   names = names(tf);
   d = d(tf);
 endfunction
