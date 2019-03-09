@@ -29,12 +29,12 @@ function run_fixed_text_encoded_file_test (ex_name, ex_dir)
     endif
     fprintf ("running: %s %s %s\n", ex_name, encoding, variant);
     decoded_text = slurp_file_one_line (fullfile (ex_dir, enc_file), encoding);
-    fprintf ("decoded: %s (%d chars)\n", decoded_text, numel (decoded_text));
+    fprintf ("  decoded: %s (%d chars)\n", decoded_text, numel (decoded_text));
     ok = isequal (ref_text, decoded_text);
     if ok
-      fprintf ("ok: %s %s %s\n", ex_name, encoding, variant);
+      fprintf ("  ok: %s %s %s\n", ex_name, encoding, variant);
     else
-      fprintf ("FAIL: %s %s %s\n", ex_name, encoding, variant);      
+      fprintf ("  FAIL: %s %s %s\n", ex_name, encoding, variant);      
     endif
   endfor
 endfunction
