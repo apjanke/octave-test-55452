@@ -15,7 +15,7 @@ endfunction
 function run_fixed_text_encoded_file_test (ex_name, ex_dir)
   fprintf ("Running fixed-text encoded file test %s:\n", ex_name);
   ref_text = slurp_file (fullfile (ex_dir, "ref.txt"), "UTF-8");
-  fprintf("Reference text: %s\n", ref_text);
+  fprintf("Reference text: %s (%d chars)\n", ref_text, numel (ref_text));
   enc_files = mydir ([ex_dir "/txt-*.txt"]);
   for i_enc_file = 1:numel (enc_files)
     enc_file = enc_files{i_enc_file};
@@ -28,7 +28,8 @@ function run_fixed_text_encoded_file_test (ex_name, ex_dir)
       variant = '';
     endif
     fprintf ("running: %s %s %s\n", ex_name, encoding, variant);
-    decoded_text = slurp_file (fullfile (ex_dir, enc_file), encoding)
+    decoded_text = slurp_file (fullfile (ex_dir, enc_file), encoding);
+    fprintf ("decoded: %s (%d chars)\n", decoded_text, numel (decoded_text));
     ok = isequal (ref_text, decoded_text);
     if ok
       fprintf ("ok: %s %s %s\n", ex_name, encoding, variant);
