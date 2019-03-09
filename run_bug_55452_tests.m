@@ -41,8 +41,8 @@ function [names, d] = mydir (the_dir_arg)
 endfunction
 
 function out = slurp_file (file, encoding)
-  fh = fopen (file, "r", "native", encoding);
+  [fh, msg] = fopen (file, "r", "native", encoding);
   if fh < 0
-    error ("Failed opening file for reading: %s", file);
+    error ("Failed opening file for reading: %s: %s", msg, file);
   endif
 endfunction
