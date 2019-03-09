@@ -13,21 +13,27 @@ function run_bug_55452_tests
 endfunction
 
 function run_fixed_text_encoded_file_test (ex_name, ex_dir)
-  fprintf ("Running fixed-text encoded file test %s:\n");
+  fprintf ("Running fixed-text encoded file test %s:\n", ex_name);
   ref_text = slurp_file (fullfile (ex_dir, "ref.txt"), "UTF-8");
-  enc_files = mydir ("ex_dir/txt-*.txt");
+  fprintf("Reference text: %s\n", ref_text);
+  enc_files = mydir ([ex_dir "/txt-*.txt"]);
   for i_enc_file = 1:numel (enc_files)
-    enc_file = enc_files{i};
+    enc_file = enc_files{i_enc_file};
     file_base_name = regexprep (enc_file, "\.txt$", "");
-    [encoding,variant] = strsplit (file_base_name(5:end), '@');
-    decoded_text = slurp_file (enc_file, encoding);
+    parts = strsplit (file_base_name(5:end), '@');
+    encoding = parts{1};
+    if numel (parts) > 1
+      variant = parts{2};
+    else
+      variant = '';
+    endif
+    fprintf ("running: %s %s %s\n", ex_name, encoding, variant);
+    decoded_text = slurp_file (fullfile (ex_dir, enc_file), encoding)
     ok = isequal (ref_text, decoded_text);
     if ok
-      % This display assumes that you're running Octave in a UTF-8 locale, because
-      % the descriptive text it's including is in UTF-8
-      fprintf ("ok: %s (\"%s\")\n", ex_name, ref_text);
+      fprintf ("ok: %s %s %s\n", ex_name, encoding, variant);
     else
-      fprintf ("FAIL: %s (\"%s\")\n", ex_name, ref_text);      
+      fprintf ("FAIL: %s %s %s\n", ex_name, encoding, variant);      
     endif
   endfor
 endfunction
@@ -45,4 +51,7 @@ function out = slurp_file (file, encoding)
   if fh < 0
     error ("Failed opening file for reading: %s: %s", msg, file);
   endif
+  out = fread (fh, '*char');
+  fclose (fh);
+  out = out(:)';
 endfunction
